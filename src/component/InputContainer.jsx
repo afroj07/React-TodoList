@@ -1,45 +1,36 @@
-import { useState } from "react";
+import { useRef } from "react";
 import Style from "./inputContainer.module.css";
 
 const InputContainer = ({ onNewItem }) => {
-  const [TodoName, setTodoName] = useState("");
-  const [Tododate, setTodoDate] = useState("");
+  const todoNameElement = useRef();
+  const todoDateElement = useRef();
 
-  const handleOnchange = (event) => {
-    setTodoName(event.target.value);
-  };
-  const handleOnDatechange = (event) => {
-    setTodoDate(event.target.value);
-  };
-
-  const handleOnclickButton = () => {
-    onNewItem(TodoName, Tododate);
-    setTodoDate("");
-    setTodoName("");
+  const handleOnclickButton = (event) => {
+    event.preventDefault();
+    const todoName = todoNameElement.current.value;
+    const todoDate = todoDateElement.current.value;
+    onNewItem(todoName, todoDate);
+    todoNameElement.current.value = "";
+    todoDateElement.current.value = "";
   };
 
   return (
-    <div className={Style.Container}>
+    <form className={Style.Container} onSubmit={handleOnclickButton}>
       <input
         type="text"
+        ref={todoNameElement}
         className={Style.InputContainer}
-        value={TodoName}
         placeholder="Enter ToDo here"
-        onChange={handleOnchange}
       />
       <input
         type="date"
         className={Style.dateContainer}
-        value={Tododate}
-        onChange={handleOnDatechange}
+        ref={todoDateElement}
       />
-      <button
-        className={`btn btn-success ${Style.button}`}
-        onClick={handleOnclickButton}
-      >
+      <button type="submit" className={`btn btn-success ${Style.button}`}>
         Add
       </button>
-    </div>
+    </form>
   );
 };
 
